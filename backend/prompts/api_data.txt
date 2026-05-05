@@ -1,0 +1,661 @@
+
+/api/plan
+
+Input
+{
+  "project_name": "WealthTrace MVP",
+  "description": "A web-based dashboard that connects to bank APIs to track monthly spending habits and visualize savings goals.",
+  "stack": [
+    "React",
+    "Node.js",
+    "PostgreSQL",
+    "Tailwind CSS"
+  ],
+  "daily_hours": 3,
+  "start_date": "2024-06-01",
+  "existing_skills": [
+    "JavaScript",
+    "Basic HTML/CSS",
+    "Git"
+  ],
+  "available_days": "all days",
+  "slot": "morning"
+}
+
+
+"plan": {
+    "total_days": 30,
+    "estimated_weeks": 5,
+    "phases": [
+      "Tech Stack Learning",
+      "Frontend",
+      "Backend",
+      "Integration",
+      "Testing & Deploy",
+      "Buffer"
+    ],
+    "tasks": [
+      {
+        "day": 1,
+        "name": "Learn React fundamentals & component structure",
+        "phase": "Tech Stack Learning",
+        "task_type": "learn",
+        "description": "",
+        "youtube_query": "React for beginners tutorial 2024",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-01",
+        "sub_todos": []
+      },
+      {
+        "day": 2,
+        "name": "Learn Node.js backend with Express API setup",
+        "phase": "Tech Stack Learning",
+        "task_type": "learn",
+        "description": "",
+        "youtube_query": "Node.js Express API tutorial 2024",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-02",
+        "sub_todos": []
+      },
+      {
+        "day": 3,
+        "name": "Learn PostgreSQL database and basic ORM usage",
+        "phase": "Tech Stack Learning",
+        "task_type": "learn",
+        "description": "",
+        "youtube_query": "PostgreSQL tutorial for Node.js developers 2024",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-03",
+        "sub_todos": []
+      },
+      {
+        "day": 4,
+        "name": "Learn Tailwind CSS essentials for rapid UI building",
+        "phase": "Tech Stack Learning",
+        "task_type": "learn",
+        "description": "",
+        "youtube_query": "Tailwind CSS crash course 2024",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-04",
+        "sub_todos": []
+      },
+      {
+        "day": 5,
+        "name": "Initialize React project, configure Tailwind, setup basic app shell",
+        "phase": "Frontend",
+        "task_type": "code",
+        "description": "Set up the foundational React project, integrate Tailwind CSS, and create the basic page layout with header and main content.",
+        "youtube_query": "",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-05",
+        "sub_todos": [
+          {
+            "todo": "Initialize React app using Vite or Create React App.",
+            "estimated_minutes": 30
+          },
+          {
+            "todo": "Integrate Tailwind CSS framework and configure `tailwind.config.js` for styling.",
+            "estimated_minutes": 45
+          },
+          {
+            "todo": "Create `App.jsx` with a basic header and a main content area using Tailwind for initial layout.",
+            "estimated_minutes": 105
+          }
+        ]
+      },
+      {
+        "day": 6,
+        "name": "Build Login and Registration forms UI components",
+        "phase": "Frontend",
+        "task_type": "code",
+        "description": "Develop the user interface components for user authentication, including login and registration forms.",
+        "youtube_query": "",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-06",
+        "sub_todos": [
+          {
+            "todo": "Create `LoginForm` component with email, password fields and a submit button using Tailwind.",
+            "estimated_minutes": 60
+          },
+          {
+            "todo": "Develop `RegisterForm` component with email, password, confirm password fields and a submit button.",
+            "estimated_minutes": 60
+          },
+          {
+            "todo": "Implement basic routing (e.g., React Router) to switch between login and register pages.",
+            "estimated_minutes": 60
+          }
+        ]
+      },
+      {
+        "day": 7,
+        "name": "Develop responsive navigation and dashboard main layout",
+        "phase": "Frontend",
+        "task_type": "code",
+        "description": "Design and implement the primary navigation system and overall dashboard layout for a user-friendly experience.",
+        "youtube_query": "",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-07",
+        "sub_todos": [
+          {
+            "todo": "Design and implement a responsive sidebar navigation component with links to different dashboard sections.",
+            "estimated_minutes": 75
+          },
+          {
+            "todo": "Create a `DashboardLayout` component to structure the main content area alongside the navigation.",
+            "estimated_minutes": 45
+          },
+          {
+            "todo": "Integrate the navigation into the dashboard layout and ensure responsiveness across devices.",
+            "estimated_minutes": 60
+          }
+        ]
+      },
+      {
+        "day": 8,
+        "name": "Review & catchup — no new task",
+        "phase": "Buffer",
+        "task_type": "buffer",
+        "description": "Use this day to catch up on pending tasks or rest",
+        "youtube_query": "",
+        "duration": "flexible",
+        "scheduled_date": "2024-06-08",
+        "sub_todos": []
+      },
+      {
+        "day": 9,
+        "name": "Setup Node.js Express server, connect to PostgreSQL, and run initial migrations",
+        "phase": "Backend",
+        "task_type": "code",
+        "description": "Initialize the backend Express server, establish database connectivity with PostgreSQL, and define initial database schemas.",
+        "youtube_query": "",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-09",
+        "sub_todos": [
+          {
+            "todo": "Initialize Node.js project, set up an Express server and define a basic health check route (`/api/health`).",
+            "estimated_minutes": 60
+          },
+          {
+            "todo": "Configure PostgreSQL database connection using an ORM (e.g., Prisma, or `pg` client) and environment variables.",
+            "estimated_minutes": 75
+          },
+          {
+            "todo": "Create an initial database migration for the `Users` table (ID, email, password_hash) and apply it.",
+            "estimated_minutes": 45
+          }
+        ]
+      },
+      {
+        "day": 10,
+        "name": "Implement user registration and login API endpoints",
+        "phase": "Backend",
+        "task_type": "code",
+        "description": "Develop the server-side logic for user registration, including password hashing, and user login with JWT generation.",
+        "youtube_query": "",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-10",
+        "sub_todos": [
+          {
+            "todo": "Develop `/api/register` endpoint to handle new user creation, including password hashing (e.g., bcrypt) and storage.",
+            "estimated_minutes": 75
+          },
+          {
+            "todo": "Implement `/api/login` endpoint to authenticate users against hashed passwords and generate a JSON Web Token (JWT).",
+            "estimated_minutes": 75
+          },
+          {
+            "todo": "Add basic server-side input validation and error handling for both registration and login routes.",
+            "estimated_minutes": 30
+          }
+        ]
+      },
+      {
+        "day": 11,
+        "name": "Integrate frontend login/register forms with backend API",
+        "phase": "Integration",
+        "task_type": "code",
+        "description": "Connect the React frontend authentication forms to the Node.js backend API for user registration and login.",
+        "youtube_query": "",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-11",
+        "sub_todos": [
+          {
+            "todo": "Implement an `onLogin` handler in React that sends user credentials to `/api/login` and stores the received JWT.",
+            "estimated_minutes": 75
+          },
+          {
+            "todo": "Implement an `onRegister` handler that sends new user details to `/api/register` and handles success/failure.",
+            "estimated_minutes": 75
+          },
+          {
+            "todo": "Add client-side form validation, loading states, and display error messages from the backend.",
+            "estimated_minutes": 30
+          }
+        ]
+      },
+      {
+        "day": 12,
+        "name": "Implement protected routes and a user context for global auth state",
+        "phase": "Integration",
+        "task_type": "code",
+        "description": "Establish a system for protecting routes and managing the global authentication state across the React application.",
+        "youtube_query": "",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-12",
+        "sub_todos": [
+          {
+            "todo": "Create a React Context (`AuthContext`) to manage user authentication state (e.g., `isLoggedIn`, `user`, `token`).",
+            "estimated_minutes": 60
+          },
+          {
+            "todo": "Develop a `PrivateRoute` component that checks `AuthContext` and redirects unauthenticated users to the login page.",
+            "estimated_minutes": 60
+          },
+          {
+            "todo": "Integrate `AuthContext` with the application and apply `PrivateRoute` to dashboard-related routes; test access control.",
+            "estimated_minutes": 60
+          }
+        ]
+      },
+      {
+        "day": 13,
+        "name": "Research bank API options (Plaid/Flinks), model transaction data",
+        "phase": "Backend",
+        "task_type": "code",
+        "description": "Investigate third-party bank aggregation APIs and design the database schema for storing fetched financial data.",
+        "youtube_query": "",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-13",
+        "sub_todos": [
+          {
+            "todo": "Research Plaid, Flinks, or similar bank aggregation APIs to understand their capabilities, authentication flows, and data structures.",
+            "estimated_minutes": 90
+          },
+          {
+            "todo": "Design PostgreSQL database schemas for `Accounts` (bank name, access token, balance) and `Transactions` (date, description, amount, category, account_id).",
+            "estimated_minutes": 60
+          },
+          {
+            "todo": "Outline initial API endpoints needed for linking banks and fetching transactions (e.g., `/api/bank/link`, `/api/transactions`).",
+            "estimated_minutes": 30
+          }
+        ]
+      },
+      {
+        "day": 14,
+        "name": "Set up mock bank API integration or initial Plaid/Flinks sandbox setup",
+        "phase": "Backend",
+        "task_type": "code",
+        "description": "Begin integrating with a chosen bank API (or create a mock for development) to handle the initial linking process.",
+        "youtube_query": "",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-14",
+        "sub_todos": [
+          {
+            "todo": "Install necessary SDKs for the chosen bank API (e.g., Plaid Node.js client) and configure credentials for sandbox environment.",
+            "estimated_minutes": 45
+          },
+          {
+            "todo": "Create a placeholder backend endpoint (e.g., `/api/bank/create-link-token`) to initiate the bank linking process (using mock data or sandbox API calls).",
+            "estimated_minutes": 75
+          },
+          {
+            "todo": "Implement a simple mock endpoint (`/api/bank/mock-transactions`) to simulate transaction data for early frontend development.",
+            "estimated_minutes": 60
+          }
+        ]
+      },
+      {
+        "day": 15,
+        "name": "Review & catchup — no new task",
+        "phase": "Buffer",
+        "task_type": "buffer",
+        "description": "Use this day to catch up on pending tasks or rest",
+        "youtube_query": "",
+        "duration": "flexible",
+        "scheduled_date": "2024-06-15",
+        "sub_todos": []
+      },
+      {
+        "day": 16,
+        "name": "Build UI for connecting to banks (e.g., 'Link Bank Account' button)",
+        "phase": "Frontend",
+        "task_type": "code",
+        "description": "Develop the user interface elements that allow users to initiate the process of connecting their bank accounts.",
+        "youtube_query": "",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-16",
+        "sub_todos": [
+          {
+            "todo": "Create a 'Link Bank Account' button component and integrate it into the dashboard UI.",
+            "estimated_minutes": 45
+          },
+          {
+            "todo": "Integrate the Plaid Link (or similar) frontend SDK, handling its initialization and lifecycle events.",
+            "estimated_minutes": 75
+          },
+          {
+            "todo": "Implement the `onSuccess` callback to capture the `public_token` and send it to the backend for exchange.",
+            "estimated_minutes": 60
+          }
+        ]
+      },
+      {
+        "day": 17,
+        "name": "Exchange `public_token` for `access_token` and store account data",
+        "phase": "Integration",
+        "task_type": "code",
+        "description": "Process the `public_token` received from the frontend to obtain a persistent `access_token` and securely store bank account details.",
+        "youtube_query": "",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-17",
+        "sub_todos": [
+          {
+            "todo": "Implement `/api/bank/exchange-token` endpoint to receive the `public_token` and exchange it for a durable `access_token` via the bank API.",
+            "estimated_minutes": 75
+          },
+          {
+            "todo": "Store the `access_token` and associated bank account details (name, type, last 4 digits) in the PostgreSQL database, linked to the user.",
+            "estimated_minutes": 60
+          },
+          {
+            "todo": "Add robust error handling for API calls and ensure secure storage practices for sensitive tokens.",
+            "estimated_minutes": 45
+          }
+        ]
+      },
+      {
+        "day": 18,
+        "name": "Implement API to fetch and store initial transactions from linked banks",
+        "phase": "Backend",
+        "task_type": "code",
+        "description": "Develop the backend logic to retrieve initial transaction history from connected bank accounts and persist it in the database.",
+        "youtube_query": "",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-18",
+        "sub_todos": [
+          {
+            "todo": "Develop `/api/transactions/sync` endpoint that uses the stored `access_token` to fetch historical transactions from the bank API.",
+            "estimated_minutes": 75
+          },
+          {
+            "todo": "Process and store fetched transactions in the `Transactions` table, implementing logic to prevent duplicate entries.",
+            "estimated_minutes": 75
+          },
+          {
+            "todo": "Add a placeholder for future scheduled tasks to periodically update transactions (e.g., using a background job or cron).",
+            "estimated_minutes": 30
+          }
+        ]
+      },
+      {
+        "day": 19,
+        "name": "Build core spending habits visualization components",
+        "phase": "Frontend",
+        "task_type": "code",
+        "description": "Create the main UI components responsible for displaying and summarizing a user's spending patterns.",
+        "youtube_query": "",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-19",
+        "sub_todos": [
+          {
+            "todo": "Create a `SpendingSummary` component displaying total monthly spending, categorized breakdowns, and budget overview.",
+            "estimated_minutes": 75
+          },
+          {
+            "todo": "Implement a `TransactionsList` component to display a paginated or scrollable list of recent financial transactions.",
+            "estimated_minutes": 60
+          },
+          {
+            "todo": "Add basic filtering and sorting options (e.g., by date, amount, category) to the transaction list.",
+            "estimated_minutes": 45
+          }
+        ]
+      },
+      {
+        "day": 20,
+        "name": "Connect spending habit UI to backend transaction data",
+        "phase": "Integration",
+        "task_type": "code",
+        "description": "Integrate the frontend spending habit components with the backend API to fetch and display actual transaction data.",
+        "youtube_query": "",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-20",
+        "sub_todos": [
+          {
+            "todo": "Create a `/api/transactions` endpoint on the backend to retrieve a user's transactions, supporting filtering and pagination.",
+            "estimated_minutes": 60
+          },
+          {
+            "todo": "Modify `SpendingSummary` and `TransactionsList` components to fetch data from the new `/api/transactions` endpoint.",
+            "estimated_minutes": 75
+          },
+          {
+            "todo": "Ensure fetched transaction data is correctly processed, formatted, and displayed within the respective UI components.",
+            "estimated_minutes": 45
+          }
+        ]
+      },
+      {
+        "day": 21,
+        "name": "Develop UI for setting and tracking savings goals",
+        "phase": "Frontend",
+        "task_type": "code",
+        "description": "Build the user interface elements that allow users to define new savings goals and monitor their progress.",
+        "youtube_query": "",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-21",
+        "sub_todos": [
+          {
+            "todo": "Create a `SavingsGoalForm` component with inputs for goal name, target amount, and initial contribution.",
+            "estimated_minutes": 60
+          },
+          {
+            "todo": "Design a `SavingsGoalCard` component to visually represent a single goal with a progress bar and current/target amounts.",
+            "estimated_minutes": 60
+          },
+          {
+            "todo": "Implement a `SavingsGoalList` component to display multiple `SavingsGoalCard` items in an organized layout.",
+            "estimated_minutes": 60
+          }
+        ]
+      },
+      {
+        "day": 22,
+        "name": "Review & catchup — no new task",
+        "phase": "Buffer",
+        "task_type": "buffer",
+        "description": "Use this day to catch up on pending tasks or rest",
+        "youtube_query": "",
+        "duration": "flexible",
+        "scheduled_date": "2024-06-22",
+        "sub_todos": []
+      },
+      {
+        "day": 23,
+        "name": "Implement API endpoints for creating, retrieving, and updating savings goals",
+        "phase": "Backend",
+        "task_type": "code",
+        "description": "Develop the server-side functionality to manage savings goals, including creation, retrieval, and updating progress.",
+        "youtube_query": "",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-23",
+        "sub_todos": [
+          {
+            "todo": "Create `SavingsGoals` database schema (ID, user_id, name, target_amount, current_amount, created_at) and apply migration.",
+            "estimated_minutes": 45
+          },
+          {
+            "todo": "Develop a `/api/goals` POST endpoint to create new savings goals associated with the authenticated user.",
+            "estimated_minutes": 75
+          },
+          {
+            "todo": "Implement GET `/api/goals` to retrieve all goals for a user and PUT `/api/goals/:id` to update goal progress.",
+            "estimated_minutes": 60
+          }
+        ]
+      },
+      {
+        "day": 24,
+        "name": "Connect frontend savings goals UI to backend API",
+        "phase": "Integration",
+        "task_type": "code",
+        "description": "Integrate the React frontend for savings goals with the backend API to enable full CRUD operations for goals.",
+        "youtube_query": "",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-24",
+        "sub_todos": [
+          {
+            "todo": "Implement the submission logic for `SavingsGoalForm` to send new goal data to the backend `/api/goals` endpoint.",
+            "estimated_minutes": 60
+          },
+          {
+            "todo": "Modify `SavingsGoalList` to fetch and display the user's savings goals from `/api/goals` upon component mount.",
+            "estimated_minutes": 75
+          },
+          {
+            "todo": "Add functionality to update a goal's `current_amount` (e.g., through a manual input or by linking to a transaction).",
+            "estimated_minutes": 45
+          }
+        ]
+      },
+      {
+        "day": 25,
+        "name": "Integrate charting library to visualize spending habits",
+        "phase": "Frontend",
+        "task_type": "code",
+        "description": "Add interactive charts to the dashboard to visually represent spending habits, enhancing data comprehension.",
+        "youtube_query": "",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-25",
+        "sub_todos": [
+          {
+            "todo": "Choose and install a suitable React charting library (e.g., Recharts, Chart.js with `react-chartjs-2`).",
+            "estimated_minutes": 45
+          },
+          {
+            "todo": "Create a `CategorySpendingChart` component to display monthly spending distribution by category (e.g., pie or bar chart).",
+            "estimated_minutes": 75
+          },
+          {
+            "todo": "Integrate the chart into the dashboard, feeding it processed transaction data fetched from the backend.",
+            "estimated_minutes": 60
+          }
+        ]
+      },
+      {
+        "day": 26,
+        "name": "Implement basic error displays and user notifications",
+        "phase": "Frontend",
+        "task_type": "code",
+        "description": "Enhance user experience by providing clear feedback through error messages and success notifications.",
+        "youtube_query": "",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-26",
+        "sub_todos": [
+          {
+            "todo": "Create a generic `ErrorDisplay` component to show error messages gracefully.",
+            "estimated_minutes": 45
+          },
+          {
+            "todo": "Integrate a toast notification system (e.g., `react-toastify`) for displaying success, warning, and info messages.",
+            "estimated_minutes": 75
+          },
+          {
+            "todo": "Apply error handling and notification triggers to key API calls (auth, bank linking, transaction fetching).",
+            "estimated_minutes": 60
+          }
+        ]
+      },
+      {
+        "day": 27,
+        "name": "Write basic unit/integration tests for critical components and API endpoints",
+        "phase": "Testing & Deploy",
+        "task_type": "code",
+        "description": "Implement essential tests to ensure the core functionality of both the frontend components and backend API endpoints.",
+        "youtube_query": "",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-27",
+        "sub_todos": [
+          {
+            "todo": "Set up Jest and React Testing Library for the frontend and write basic tests for `LoginForm` and `RegisterForm` components.",
+            "estimated_minutes": 75
+          },
+          {
+            "todo": "Write basic integration tests for the backend `/api/register` and `/api/login` endpoints using Supertest or similar.",
+            "estimated_minutes": 75
+          },
+          {
+            "todo": "Ensure testing scripts are configured in `package.json` for easy execution.",
+            "estimated_minutes": 30
+          }
+        ]
+      },
+      {
+        "day": 28,
+        "name": "Review & catchup — no new task",
+        "phase": "Buffer",
+        "task_type": "buffer",
+        "description": "Use this day to catch up on pending tasks or rest",
+        "youtube_query": "",
+        "duration": "flexible",
+        "scheduled_date": "2024-06-28",
+        "sub_todos": []
+      },
+      {
+        "day": 29,
+        "name": "Prepare application for deployment (e.g., Vercel for frontend, Render/Heroku for backend)",
+        "phase": "Testing & Deploy",
+        "task_type": "code",
+        "description": "Configure the project for production deployment, setting up environment variables and platform-specific configurations.",
+        "youtube_query": "",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-29",
+        "sub_todos": [
+          {
+            "todo": "Configure `package.json` scripts for building production assets and set up environment variables for deployment.",
+            "estimated_minutes": 75
+          },
+          {
+            "todo": "Set up a `vercel.json` or similar configuration for frontend deployment (if using Vercel/Netlify).",
+            "estimated_minutes": 60
+          },
+          {
+            "todo": "Create a `render.yaml`, `Procfile`, or `Dockerfile` for backend deployment (if using Render/Heroku).",
+            "estimated_minutes": 45
+          }
+        ]
+      },
+      {
+        "day": 30,
+        "name": "Perform initial deployment of frontend and backend",
+        "phase": "Testing & Deploy",
+        "task_type": "code",
+        "description": "Execute the first deployment of the full-stack application to a production environment and conduct final checks.",
+        "youtube_query": "",
+        "duration": "3 hours",
+        "scheduled_date": "2024-06-30",
+        "sub_todos": [
+          {
+            "todo": "Deploy the React frontend application to the chosen hosting platform (Vercel/Netlify).",
+            "estimated_minutes": 60
+          },
+          {
+            "todo": "Deploy the Node.js Express backend to the chosen hosting platform (Render/Heroku/AWS EC2).",
+            "estimated_minutes": 75
+          },
+          {
+            "todo": "Perform end-to-end testing of the deployed application for critical features (auth, bank link, data display).",
+            "estimated_minutes": 45
+          }
+        ]
+      }
+    ]
+  },
+
+output
+{
+  "project_id": 2,
+  "message": "Plan generated and saved with project id 2"
+}
