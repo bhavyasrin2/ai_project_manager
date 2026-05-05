@@ -2,24 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { generatePlan } from "../api/client";
 
-// Map the work-window dropdown label → { slot, daily_hours }
-const WINDOW_MAP = {
-  "11 AM – 1 PM (2 hrs)": { slot: "morning", daily_hours: 2 },
-  "6 PM – 9 PM (3 hrs)":  { slot: "evening", daily_hours: 3 },
-  "8 AM – 10 AM (2 hrs)": { slot: "morning", daily_hours: 2 },
-  "9 PM – 11 PM (2 hrs)": { slot: "evening", daily_hours: 2 },
-  "Flexible":              { slot: "evening", daily_hours: 2 },
-};
-
-// Map duration dropdown → approximate total_days
-const DURATION_MAP = {
-  "1 week":   7,
-  "2 weeks":  14,
-  "1 month":  30,
-  "2 months": 60,
-  "3 months": 90,
-};
-
 export default function SetupPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -30,26 +12,21 @@ export default function SetupPage() {
     setError(null);
     setLoading(true);
 
-    const windowLabel   = document.getElementById("work-window").value;
-    const durationLabel = document.getElementById("duration").value;
-    const { slot, daily_hours } = WINDOW_MAP[windowLabel] || { slot: "evening", daily_hours: 2 };
-    const total_days = DURATION_MAP[durationLabel] || 14;
+    const stackRaw  = document.getElementById("tech-stack").value;
+    const stack      = stackRaw ? stackRaw.split(",").map((s) => s.trim()).filter(Boolean) : [];
 
-    const stackRaw = document.getElementById("tech-stack").value;
-    const stack    = stackRaw ? stackRaw.split(",").map((s) => s.trim()).filter(Boolean) : [];
-
-    // start_date = today
-    const start_date = new Date().toISOString().split("T")[0];
+    const skillsRaw       = document.getElementById("existing-skills").value;
+    const existing_skills = skillsRaw ? skillsRaw.split(",").map((s) => s.trim()).filter(Boolean) : [];
 
     const payload = {
       project_name:    document.getElementById("project-name").value.trim(),
       description:     document.getElementById("project-desc").value.trim(),
       stack,
-      daily_hours,
-      start_date,
-      existing_skills: [],
-      available_days:  "all days",
-      slot,
+      daily_hours:     parseInt(document.getElementById("daily-hours").value, 10),
+      start_date:      document.getElementById("start-date").value,
+      existing_skills,
+      available_days:  document.getElementById("available-days").value,
+      slot:            document.getElementById("slot").value,
     };
 
     try {
@@ -139,26 +116,56 @@ export default function SetupPage() {
             />
           </div>
 
+          <div style={s.fieldGroup}>
+            <label style={s.label}>Existing Skills <span style={s.labelHint}>(optional)</span></label>
+            <input
+              id="existing-skills"
+              placeholder="e.g. Python, HTML/CSS, Git — skills you already know"
+              style={s.input}
+              disabled={loading}
+            />
+          </div>
+
           <div style={s.row}>
             <div style={{ ...s.fieldGroup, flex: 1 }}>
-              <label style={s.label}>Daily Work Window</label>
-              <select id="work-window" style={s.select} disabled={loading}>
-                <option>11 AM – 1 PM (2 hrs)</option>
-                <option>6 PM – 9 PM (3 hrs)</option>
-                <option>8 AM – 10 AM (2 hrs)</option>
-                <option>9 PM – 11 PM (2 hrs)</option>
-                <option>Flexible</option>
+              <label style={s.label}>Start Date</label>
+              <input
+                id="start-date"
+                type="date"
+                defaultValue={new Date().toISOString().split("T")[0]}
+                style={s.input}
+                required
+                disabled={loading}
+              />
+            </div>
+
+            <div style={{ ...s.fieldGroup, flex: 1 }}>
+              <label style={s.label}>Available Days</label>
+              <select id="available-days" style={s.select} disabled={loading}>
+                <option value="all days">All Days</option>
+                <option value="weekdays">Weekdays Only</option>
+                <option value="weekends">Weekends Only</option>
+              </select>
+            </div>
+          </div>
+
+          <div style={s.row}>
+            <div style={{ ...s.fieldGroup, flex: 1 }}>
+              <label style={s.label}>Work Slot</label>
+              <select id="slot" style={s.select} disabled={loading}>
+                <option value="morning">Morning (11 AM – 1 PM)</option>
+                <option value="evening">Evening (6 PM – 9 PM)</option>
               </select>
             </div>
 
             <div style={{ ...s.fieldGroup, flex: 1 }}>
-              <label style={s.label}>Target Duration</label>
-              <select id="duration" style={s.select} disabled={loading}>
-                <option>1 week</option>
-                <option>2 weeks</option>
-                <option>1 month</option>
-                <option>2 months</option>
-                <option>3 months</option>
+              <label style={s.label}>Daily Hours</label>
+              <select id="daily-hours" style={s.select} disabled={loading}>
+                <option value="1">1 hour/day</option>
+                <option value="2">2 hours/day</option>
+                <option value="3">3 hours/day</option>
+                <option value="4">4 hours/day</option>
+                <option value="5">5 hours/day</option>
               </select>
             </div>
           </div>
@@ -256,6 +263,7 @@ const s = {
   },
   fieldGroup: { display: "flex", flexDirection: "column", gap: 8 },
   label: { fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.75)" },
+  labelHint: { fontWeight: 400, color: "rgba(255,255,255,0.35)", fontSize: 12, marginLeft: 4 },
   input: {
     background: "rgba(255,255,255,0.05)",
     border: "1px solid rgba(255,255,255,0.09)",
