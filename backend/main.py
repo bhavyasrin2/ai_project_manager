@@ -119,6 +119,7 @@ app = FastAPI(
 _raw_origins = os.getenv(
     "ALLOWED_ORIGINS",
     "http://localhost:5173,http://localhost:3000"
+    # ↑ local dev default. On Render, set ALLOWED_ORIGINS=https://your-app.vercel.app
 )
 _allowed_origins = [o.strip() for o in _raw_origins.split(",")]
 
