@@ -16,5 +16,5 @@ services:
         value: /etc/secrets/token.json
       # Set these manually in Render dashboard (sensitive):
       # YOUR_EMAIL
-      # ANTHROPIC_API_KEY
+      # GEMINI_API_KEY
       # ALLOWED_ORIGINS  →  https://your-app.vercel.app
