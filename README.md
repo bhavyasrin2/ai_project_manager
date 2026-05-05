@@ -108,7 +108,7 @@ ai-project-manager/
 ### 1. Clone & Setup Backend
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/ai-project-manager.git
+git clone https://github.com/bhavyasrin2/ai_project_manager.git
 cd ai-project-manager/backend
 
 python -m venv venv
