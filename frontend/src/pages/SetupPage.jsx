@@ -48,16 +48,20 @@ export default function SetupPage() {
       daily_hours,
       start_date,
       existing_skills: [],
-      available_days:  "all",
+      available_days:  "all days",
       slot,
-      total_days,
     };
 
     try {
       const data = await generatePlan(payload);
-      // Backend returns { project_id, ... }
-      navigate(`/projects/${data.project_id}`);
+      console.log("Plan API response:", data);
+      const projectId = data?.project_id;
+      if (!projectId) {
+        throw new Error(`No project_id in response: ${JSON.stringify(data)}`);
+      }
+      navigate(`/projects/${projectId}`);
     } catch (err) {
+      console.error("generatePlan error:", err);
       setError(err.message || "Failed to generate plan. Please try again.");
       setLoading(false);
     }
