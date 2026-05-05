@@ -1,11 +1,66 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { generatePlan } from "../api/client";
+
+// Map the work-window dropdown label → { slot, daily_hours }
+const WINDOW_MAP = {
+  "11 AM – 1 PM (2 hrs)": { slot: "morning", daily_hours: 2 },
+  "6 PM – 9 PM (3 hrs)":  { slot: "evening", daily_hours: 3 },
+  "8 AM – 10 AM (2 hrs)": { slot: "morning", daily_hours: 2 },
+  "9 PM – 11 PM (2 hrs)": { slot: "evening", daily_hours: 2 },
+  "Flexible":              { slot: "evening", daily_hours: 2 },
+};
+
+// Map duration dropdown → approximate total_days
+const DURATION_MAP = {
+  "1 week":   7,
+  "2 weeks":  14,
+  "1 month":  30,
+  "2 months": 60,
+  "3 months": 90,
+};
 
 export default function SetupPage() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError]     = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/plan");
+    setError(null);
+    setLoading(true);
+
+    const windowLabel   = document.getElementById("work-window").value;
+    const durationLabel = document.getElementById("duration").value;
+    const { slot, daily_hours } = WINDOW_MAP[windowLabel] || { slot: "evening", daily_hours: 2 };
+    const total_days = DURATION_MAP[durationLabel] || 14;
+
+    const stackRaw = document.getElementById("tech-stack").value;
+    const stack    = stackRaw ? stackRaw.split(",").map((s) => s.trim()).filter(Boolean) : [];
+
+    // start_date = today
+    const start_date = new Date().toISOString().split("T")[0];
+
+    const payload = {
+      project_name:    document.getElementById("project-name").value.trim(),
+      description:     document.getElementById("project-desc").value.trim(),
+      stack,
+      daily_hours,
+      start_date,
+      existing_skills: [],
+      available_days:  "all",
+      slot,
+      total_days,
+    };
+
+    try {
+      const data = await generatePlan(payload);
+      // Backend returns { project_id, ... }
+      navigate(`/projects/${data.project_id}`);
+    } catch (err) {
+      setError(err.message || "Failed to generate plan. Please try again.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -41,6 +96,11 @@ export default function SetupPage() {
           </p>
         </div>
 
+        {/* Error banner */}
+        {error && (
+          <div style={s.errorBanner}>⚠️ {error}</div>
+        )}
+
         {/* Form card */}
         <form style={s.card} onSubmit={handleSubmit} className="anim-fade-up anim-delay-2">
           <div style={s.fieldGroup}>
@@ -50,6 +110,7 @@ export default function SetupPage() {
               placeholder="e.g. AI Project Manager"
               style={s.input}
               required
+              disabled={loading}
             />
           </div>
 
@@ -60,6 +121,7 @@ export default function SetupPage() {
               placeholder="Describe what you're building, the goals, and any constraints..."
               style={s.textarea}
               required
+              disabled={loading}
             />
           </div>
 
@@ -69,13 +131,14 @@ export default function SetupPage() {
               id="tech-stack"
               placeholder="e.g. React, FastAPI, PostgreSQL, Gemini AI"
               style={s.input}
+              disabled={loading}
             />
           </div>
 
           <div style={s.row}>
             <div style={{ ...s.fieldGroup, flex: 1 }}>
               <label style={s.label}>Daily Work Window</label>
-              <select id="work-window" style={s.select}>
+              <select id="work-window" style={s.select} disabled={loading}>
                 <option>11 AM – 1 PM (2 hrs)</option>
                 <option>6 PM – 9 PM (3 hrs)</option>
                 <option>8 AM – 10 AM (2 hrs)</option>
@@ -86,7 +149,7 @@ export default function SetupPage() {
 
             <div style={{ ...s.fieldGroup, flex: 1 }}>
               <label style={s.label}>Target Duration</label>
-              <select id="duration" style={s.select}>
+              <select id="duration" style={s.select} disabled={loading}>
                 <option>1 week</option>
                 <option>2 weeks</option>
                 <option>1 month</option>
@@ -96,14 +159,20 @@ export default function SetupPage() {
             </div>
           </div>
 
-          <button id="generate-plan-btn" type="submit" style={s.submitBtn}>
-            ✦ Generate AI Plan
+          <button
+            id="generate-plan-btn"
+            type="submit"
+            style={{ ...s.submitBtn, opacity: loading ? 0.7 : 1, cursor: loading ? "not-allowed" : "pointer" }}
+            disabled={loading}
+          >
+            {loading ? "⏳ Generating AI Plan…" : "✦ Generate AI Plan"}
           </button>
         </form>
       </div>
     </div>
   );
 }
+
 
 const s = {
   page: {
@@ -112,6 +181,16 @@ const s = {
     position: "relative",
     overflow: "hidden",
     fontFamily: "'Inter', sans-serif",
+  },
+  errorBanner: {
+    maxWidth: 640,
+    margin: "0 auto 16px",
+    padding: "12px 20px",
+    borderRadius: 10,
+    background: "rgba(239,68,68,0.15)",
+    border: "1px solid rgba(239,68,68,0.4)",
+    color: "#fca5a5",
+    fontSize: 14,
   },
   orb1: {
     position: "absolute", width: 500, height: 500, borderRadius: "50%",
