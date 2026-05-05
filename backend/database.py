@@ -1,14 +1,19 @@
 import os
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine, text, inspect
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-DB_PATH      = os.getenv("DB_PATH", "./life_os.db")   # override via Render env var
-DATABASE_URL = f"sqlite:///{DB_PATH}"
+# ── Database URL ──────────────────────────────────────────────
+# Local dev:   uses SQLite (default)
+# Production:  set DATABASE_URL env var to your Neon/PostgreSQL URL
+#              e.g. postgresql://user:pass@host/dbname?sslmode=require
+DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{os.getenv('DB_PATH', './life_os.db')}")
 
-engine = create_engine(
-    DATABASE_URL,
-    connect_args={"check_same_thread": False}
-)
+IS_SQLITE = DATABASE_URL.startswith("sqlite")
+
+# SQLite needs check_same_thread=False; PostgreSQL does not
+connect_args = {"check_same_thread": False} if IS_SQLITE else {}
+
+engine = create_engine(DATABASE_URL, connect_args=connect_args)
 
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
@@ -23,20 +28,28 @@ def init_db():
 
 def _migrate_db():
     """Apply lightweight schema migrations for columns added after initial deploy."""
-    with engine.connect() as conn:
-        # Fetch existing columns in the projects table
-        result = conn.execute(text("PRAGMA table_info(projects)"))
-        existing_columns = {row[1] for row in result}
+    inspector = inspect(engine)
 
-        migrations = [
-            ("total_days",      "ALTER TABLE projects ADD COLUMN total_days INTEGER DEFAULT 0"),
-            ("estimated_weeks", "ALTER TABLE projects ADD COLUMN estimated_weeks INTEGER DEFAULT 0"),
-        ]
+    # Check if 'projects' table exists yet
+    if "projects" not in inspector.get_table_names():
+        return
+
+    existing_columns = {col["name"] for col in inspector.get_columns("projects")}
+
+    migrations = [
+        ("total_days",      "ALTER TABLE projects ADD COLUMN total_days INTEGER DEFAULT 0"),
+        ("estimated_weeks", "ALTER TABLE projects ADD COLUMN estimated_weeks INTEGER DEFAULT 0"),
+    ]
+
+    with engine.connect() as conn:
         for col_name, sql in migrations:
             if col_name not in existing_columns:
-                conn.execute(text(sql))
-                print(f"[migrate] Added column '{col_name}' to projects table.")
-        conn.commit()
+                try:
+                    conn.execute(text(sql))
+                    conn.commit()
+                    print(f"[migrate] Added column '{col_name}' to projects table.")
+                except Exception as e:
+                    print(f"[migrate] Skipped '{col_name}': {e}")
 
 
 def get_db():

@@ -200,6 +200,17 @@ def debug_status(db: Session = Depends(get_db)):
     return {"email_logs": result, "total": len(result)}
 
 
+@app.delete("/api/debug/email-logs/{log_id}", summary="[DEBUG] Delete a test EmailLog so the cron can re-send it")
+def debug_delete_email_log(log_id: int, db: Session = Depends(get_db)):
+    """Removes an EmailLog row so the cron job treats the task as un-emailed."""
+    log = db.query(models.EmailLog).filter(models.EmailLog.id == log_id).first()
+    if not log:
+        raise HTTPException(status_code=404, detail="Log not found")
+    db.delete(log)
+    db.commit()
+    return {"message": f"EmailLog {log_id} deleted — cron will re-send at next trigger."}
+
+
 @app.post("/api/debug/test-poll-replies/{day}", summary="[DEBUG] Directly test poll_replies for a day number")
 def debug_test_poll_replies(day: int):
     """

@@ -1,6 +1,5 @@
 fastapi
 uvicorn
-anthropic
 google-auth
 google-auth-oauthlib
 google-api-python-client
@@ -8,4 +7,5 @@ apscheduler
 sqlalchemy
 python-dotenv
 pydantic
-google.genai
+google-generativeai
+psycopg2-binary

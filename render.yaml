@@ -5,16 +5,11 @@ services:
     rootDir: backend
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
-    disk:
-      name: sqlite-data
-      mountPath: /data
-      sizeGB: 1
     envVars:
-      - key: DB_PATH
-        value: /data/life_os.db
       - key: GOOGLE_TOKEN_PATH
         value: /etc/secrets/token.json
       # Set these manually in Render dashboard (sensitive):
-      # YOUR_EMAIL
-      # GEMINI_API_KEY
-      # ALLOWED_ORIGINS  →  https://your-app.vercel.app
+      # DATABASE_URL   → your Neon PostgreSQL connection string
+      # GEMINI_API_KEY → your Gemini API key
+      # YOUR_EMAIL     → your Gmail address
+      # ALLOWED_ORIGINS → https://your-app.vercel.app

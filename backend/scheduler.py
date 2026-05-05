@@ -27,14 +27,15 @@ def job_send_daily_emails(force_slot: str = None, force_date: str = None):
     if force_slot:
         target_slot = force_slot
     else:
-        now = datetime.now()
-        current_hour, current_minute = now.hour, now.minute
-        target_slot = None
-        # before 45 minutes send message
-        if current_hour == 10 and 15 <= current_minute <= 29:
+        # APScheduler already fires this job at exactly 10:45 and 17:45.
+        # Just use the hour to determine the slot — no minute range needed.
+        current_hour = datetime.now().hour
+        if current_hour == 10:
             target_slot = "morning"
-        elif current_hour == 17 and 15 <= current_minute <= 29:
+        elif current_hour == 17:
             target_slot = "evening"
+        else:
+            target_slot = None
 
         if not target_slot:
             db.close()
@@ -165,11 +166,27 @@ def start_scheduler():
     # Send emails 15 min before each calendar slot:
     #   10:45 AM → morning slot (calendar at 11:00 AM)
     #   05:45 PM → evening slot (calendar at 06:00 PM)
-    scheduler.add_job(job_send_daily_emails, 'cron', hour='10,17', minute=45)
-    scheduler.add_job(job_poll_inbox, 'interval', minutes=30)
-    scheduler.add_job(job_auto_reschedule, 'cron', hour=2)
+    # replace_existing=True prevents duplicate jobs when uvicorn --reload restarts.
+    scheduler.add_job(
+        job_send_daily_emails, 'cron',
+        hour='10,17', minute=45,
+        id='send_daily_emails', replace_existing=True
+    )
+    scheduler.add_job(
+        job_poll_inbox, 'interval',
+        minutes=30,
+        id='poll_inbox', replace_existing=True
+    )
+    scheduler.add_job(
+        job_auto_reschedule, 'cron',
+        hour=2,
+        id='auto_reschedule', replace_existing=True
+    )
     scheduler.start()
     print("⏳ Background scheduler started. Cron jobs are active.")
+    print(f"   send_daily_emails → 10:45 AM and 5:45 PM daily")
+    print(f"   poll_inbox        → every 30 minutes")
+    print(f"   auto_reschedule   → 2:00 AM daily")
 
 def stop_scheduler():
     scheduler.shutdown()
