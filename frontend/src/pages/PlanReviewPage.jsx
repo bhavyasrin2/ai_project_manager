@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getProjectPlan, completeTask } from "../api/client";
+import { getProjectPlan, completeTask, updateTask, deleteTask } from "../api/client";
 import AppLogo from "../components/AppLogo";
 
 // ── Phase colour map ──────────────────────────────────────────────────────────
@@ -30,6 +30,9 @@ export default function PlanReviewPage() {
   const [filter, setFilter]     = useState("All");
   const [expanded, setExpanded] = useState({});
   const [toggling, setToggling] = useState(null); // task id being toggled
+  const [editingTask, setEditingTask] = useState(null);
+  const [deleting, setDeleting] = useState(null);
+  const [saving, setSaving] = useState(false);
 
   const load = () => {
     setLoading(true);
@@ -55,6 +58,36 @@ export default function PlanReviewPage() {
       setToggling(null);
     }
   };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    if (!editingTask) return;
+    setSaving(true);
+    try {
+      await updateTask(editingTask.id, editingTask);
+      setEditingTask(null);
+      load();
+    } catch (e) {
+      alert(e.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async (taskId) => {
+    if (!window.confirm("Are you sure you want to delete this task? This will remove it from your plan.")) return;
+    setDeleting(taskId);
+    try {
+      await deleteTask(taskId);
+      load();
+    } catch (e) {
+      alert(e.message);
+    } finally {
+      setDeleting(null);
+    }
+  };
+
+  const isSynced = useMemo(() => data?.tasks?.some(t => t.calendar_event_id), [data]);
 
   const filtered = useMemo(() => {
     if (!data?.tasks) return [];
@@ -246,6 +279,24 @@ export default function PlanReviewPage() {
                   </a>
                 )}
 
+                {/* Edit / Delete Actions */}
+                <div style={s.cardActions}>
+                   <button 
+                    style={{...s.actionBtn, ...s.editBtn}} 
+                    onClick={() => setEditingTask(task)}
+                    disabled={isSynced || deleting === task.id}
+                   >
+                     {isSynced ? "🔒 Locked" : "✎ Edit"}
+                   </button>
+                   <button 
+                    style={{...s.actionBtn, ...s.delBtn}} 
+                    onClick={() => handleDelete(task.id)}
+                    disabled={isSynced || deleting === task.id}
+                   >
+                     {deleting === task.id ? "..." : "🗑 Delete"}
+                   </button>
+                </div>
+
                 {/* Toggle button */}
                 {/* {!isBuffer && (
                   <button
@@ -275,6 +326,82 @@ export default function PlanReviewPage() {
         )}
 
       </div>
+
+      {/* Edit Modal */}
+      {editingTask && (
+        <div style={s.modalOverlay} onClick={() => setEditingTask(null)}>
+          <div style={s.modal} onClick={e => e.stopPropagation()}>
+            <h2 style={s.modalTitle}>Edit Task</h2>
+            <form onSubmit={handleUpdate} style={s.editForm}>
+              <div style={s.formField}>
+                <label style={s.modalLabel}>Task Name</label>
+                <input 
+                  style={s.modalInput} 
+                  value={editingTask.name} 
+                  onChange={e => setEditingTask({...editingTask, name: e.target.value})}
+                  required
+                />
+              </div>
+              <div style={s.formField}>
+                <label style={s.modalLabel}>Description</label>
+                <textarea 
+                  style={{...s.modalInput, height: 80, resize: 'none'}} 
+                  value={editingTask.description} 
+                  onChange={e => setEditingTask({...editingTask, description: e.target.value})}
+                />
+              </div>
+              <div style={s.formRow}>
+                <div style={{flex: 1}}>
+                  <label style={s.modalLabel}>Phase</label>
+                  <select 
+                    style={s.modalInput} 
+                    value={editingTask.phase}
+                    onChange={e => setEditingTask({...editingTask, phase: e.target.value})}
+                  >
+                    {Object.keys(PHASE_COLOR).map(p => <option key={p} value={p}>{p}</option>)}
+                  </select>
+                </div>
+                <div style={{flex: 1}}>
+                  <label style={s.modalLabel}>Type</label>
+                  <select 
+                    style={s.modalInput} 
+                    value={editingTask.task_type}
+                    onChange={e => setEditingTask({...editingTask, task_type: e.target.value})}
+                  >
+                    {Object.keys(TYPE_LABEL).map(t => <option key={t} value={t}>{TYPE_LABEL[t]}</option>)}
+                  </select>
+                </div>
+              </div>
+              <div style={s.formRow}>
+                 <div style={{flex: 1}}>
+                  <label style={s.modalLabel}>Date</label>
+                  <input 
+                    type="date"
+                    style={s.modalInput} 
+                    value={editingTask.scheduled_date} 
+                    onChange={e => setEditingTask({...editingTask, scheduled_date: e.target.value})}
+                  />
+                </div>
+                <div style={{flex: 1}}>
+                  <label style={s.modalLabel}>Duration</label>
+                  <input 
+                    style={s.modalInput} 
+                    value={editingTask.duration} 
+                    onChange={e => setEditingTask({...editingTask, duration: e.target.value})}
+                  />
+                </div>
+              </div>
+
+              <div style={s.modalActions}>
+                <button type="button" style={s.modalCancel} onClick={() => setEditingTask(null)}>Cancel</button>
+                <button type="submit" style={s.modalSubmit} disabled={saving}>
+                  {saving ? "Saving..." : "Save Changes"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -331,4 +458,19 @@ const s = {
   mins:     { fontSize: 11, color: "rgba(255,255,255,0.3)" },
   ytLink:   { fontSize: 12, fontWeight: 600, color: "#f87171", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 },
   toggleBtn:{ padding: "9px 16px", fontSize: 12, fontWeight: 700, borderRadius: 8, cursor: "pointer", transition: "all 0.2s", marginTop: "auto" },
+  cardActions: { display: "flex", gap: 10, marginTop: 10, paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.06)" },
+  actionBtn: { flex: 1, padding: "8px", fontSize: 12, fontWeight: 600, borderRadius: 8, cursor: "pointer", border: "1px solid", transition: "all 0.2s" },
+  editBtn: { background: "rgba(168,85,247,0.1)", color: "#c084fc", borderColor: "rgba(168,85,247,0.3)" },
+  delBtn: { background: "rgba(239,68,68,0.1)", color: "#fca5a5", borderColor: "rgba(239,68,68,0.3)" },
+  modalOverlay: { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 },
+  modal: { width: '100%', maxWidth: 500, background: '#12101c', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 24, padding: 32, boxShadow: '0 24px 64px rgba(0,0,0,0.5)' },
+  modalTitle: { fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 24 },
+  editForm: { display: 'flex', flexDirection: 'column', gap: 18 },
+  formField: { display: 'flex', flexDirection: 'column', gap: 8 },
+  formRow: { display: 'flex', gap: 16 },
+  modalLabel: { fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.05em' },
+  modalInput: { background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10, padding: '10px 14px', color: '#fff', fontSize: 14, outline: 'none', width: '100%' },
+  modalActions: { display: 'flex', gap: 12, marginTop: 10 },
+  modalCancel: { flex: 1, padding: '12px', borderRadius: 12, background: 'transparent', color: 'rgba(255,255,255,0.5)', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer', fontWeight: 600 },
+  modalSubmit: { flex: 2, padding: '12px', borderRadius: 12, background: 'linear-gradient(135deg,#7c3aed,#6366f1)', color: '#fff', border: 'none', cursor: 'pointer', fontWeight: 700, boxShadow: '0 0 20px rgba(124,58,237,0.3)' },
 };

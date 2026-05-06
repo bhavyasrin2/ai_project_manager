@@ -47,6 +47,16 @@ export const syncCalendar = (id) =>
 export const completeTask = (taskId) =>
   request(`/api/tasks/${taskId}/complete`, { method: "POST" });
 
+/** Update task details.
+ *  Returns { message, task: TaskOut } */
+export const updateTask = (taskId, payload) =>
+  request(`/api/tasks/${taskId}`, { method: "PATCH", body: JSON.stringify(payload) });
+
+/** Delete a task.
+ *  Returns { message, task_id } */
+export const deleteTask = (taskId) =>
+  request(`/api/tasks/${taskId}`, { method: "DELETE" });
+
 /** Delete a project and all its tasks + email logs.
  *  Returns { message, project_id } */
 export const deleteProject = (id) =>

@@ -595,3 +595,56 @@ def complete_task(task_id: int, db: Session = Depends(get_db)):
         task_id=task_id,
         new_status=new_status,
     )
+
+
+# ──────────────────────────────────────────────────────────────
+# PATCH /api/tasks/{task_id}  —  partial edit
+# ──────────────────────────────────────────────────────────────
+
+@app.patch(
+    "/api/tasks/{task_id}",
+    response_model=schemas.TaskUpdateResponse,
+    summary="Update task details",
+)
+def update_task(task_id: int, body: schemas.TaskUpdateRequest, db: Session = Depends(get_db)):
+    task = db.query(models.Task).filter(models.Task.id == task_id).first()
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    if task.calendar_event_id:
+        raise HTTPException(status_code=400, detail="Cannot edit task that is already synced to calendar")
+
+    if body.name is not None: task.name = body.name
+    if body.description is not None: task.description = body.description
+    if body.phase is not None: task.phase = body.phase
+    if body.task_type is not None: task.task_type = body.task_type
+    if body.duration is not None: task.duration = body.duration
+    if body.scheduled_date is not None: task.scheduled_date = body.scheduled_date
+    if body.youtube_query is not None: task.youtube_query = body.youtube_query
+    if body.sub_todos is not None: task.sub_todos = json.dumps(body.sub_todos)
+
+    db.commit()
+    db.refresh(task)
+    return schemas.TaskUpdateResponse(message="Task updated", task=task)
+
+
+# ──────────────────────────────────────────────────────────────
+# DELETE /api/tasks/{task_id}  —  delete task
+# ──────────────────────────────────────────────────────────────
+
+@app.delete(
+    "/api/tasks/{task_id}",
+    response_model=schemas.TaskDeleteResponse,
+    summary="Delete a task",
+)
+def delete_task(task_id: int, db: Session = Depends(get_db)):
+    task = db.query(models.Task).filter(models.Task.id == task_id).first()
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    if task.calendar_event_id:
+        raise HTTPException(status_code=400, detail="Cannot delete task that is already synced to calendar")
+
+    db.delete(task)
+    db.commit()
+    return schemas.TaskDeleteResponse(message="Task deleted", task_id=task_id)

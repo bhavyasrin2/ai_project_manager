@@ -50,6 +50,11 @@ export default function ProjectDetailDashboard() {
   };
 
   const handleSync = async () => {
+    const confirmed = window.confirm(
+      "Important: Once synced to Google Calendar, the project plan will be FIXED. You won't be able to edit or delete tasks anymore. Proceed?"
+    );
+    if (!confirmed) return;
+
     setSyncing(true);
     setSyncMsg(null);
     try {

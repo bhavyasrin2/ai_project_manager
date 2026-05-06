@@ -231,3 +231,28 @@ class DashboardResponse(BaseModel):
     streak: int
     completion_percent: float
     tasks: List[DashboardTask]
+
+
+# ----------------------------------------------
+# Task edit / delete schemas
+# ----------------------------------------------
+
+class TaskUpdateRequest(BaseModel):
+    name: str = None
+    description: str = None
+    phase: str = None
+    task_type: str = None
+    duration: str = None
+    scheduled_date: str = None
+    youtube_query: str = None
+    sub_todos: Any = None
+
+
+class TaskUpdateResponse(BaseModel):
+    message: str
+    task: TaskOut
+
+
+class TaskDeleteResponse(BaseModel):
+    message: str
+    task_id: int
