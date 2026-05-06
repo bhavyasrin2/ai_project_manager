@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { getProjects, deleteProject } from "../api/client";
+import AppLogo from "../components/AppLogo";
 
 // ── colour palette per stack keyword ─────────────────────────────────────────
 const STACK_COLORS = {
@@ -103,10 +104,7 @@ export default function ProjectListDashboard() {
       {/* Nav */}
       <nav style={s.nav}>
         <div style={s.navLogo}>
-          <div style={s.logoIcon}>✦</div>
-          <span style={s.logoText}>
-            <span className="gradient-text">AI</span> Manager
-          </span>
+          <AppLogo size={28} textSize={16} />
         </div>
         <div style={s.navActions}>
           <button style={s.newBtn} id="new-project-btn" onClick={() => navigate("/setup")}>

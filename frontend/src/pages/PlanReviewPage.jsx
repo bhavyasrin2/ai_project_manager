@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getProjectPlan, completeTask } from "../api/client";
+import AppLogo from "../components/AppLogo";
 
 // ── Phase colour map ──────────────────────────────────────────────────────────
 const PHASE_COLOR = {
@@ -94,8 +95,7 @@ export default function PlanReviewPage() {
       <nav style={s.nav}>
         <button style={s.backBtn} onClick={() => navigate(`/project/${id}`)}>← Overview</button>
         <div style={s.navLogo}>
-          <div style={s.logoIcon}>✦</div>
-          <span style={s.logoText}><span className="gradient-text">AI</span> Manager</span>
+          <AppLogo size={28} textSize={16} />
         </div>
         <span style={{ ...s.statusBadge, color: status === "completed" ? "#4ade80" : "#c084fc", borderColor: status === "completed" ? "rgba(74,222,128,0.3)" : "rgba(168,85,247,0.3)", background: status === "completed" ? "rgba(74,222,128,0.1)" : "rgba(168,85,247,0.1)" }}>
           {status === "completed" ? "✓ Completed" : "● Active"}
@@ -290,7 +290,6 @@ const s = {
   nav: { position: "sticky", top: 0, zIndex: 100, height: 64, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 clamp(20px,4vw,64px)", background: "rgba(8,5,15,0.85)", backdropFilter: "blur(20px)", borderBottom: "1px solid rgba(255,255,255,0.07)" },
   backBtn: { background: "transparent", color: "rgba(255,255,255,0.55)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 999, padding: "7px 16px", fontSize: 13, fontWeight: 500, cursor: "pointer" },
   navLogo: { display: "flex", alignItems: "center", gap: 9 },
-  logoIcon:{ width: 28, height: 28, borderRadius: 7, background: "linear-gradient(135deg,#7c3aed,#6366f1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 },
   logoText:{ fontSize: 16, fontWeight: 800, color: "#fff", letterSpacing: "-0.03em" },
   statusBadge: { fontSize: 11, fontWeight: 700, padding: "4px 12px", borderRadius: 999, border: "1px solid" },
   content: { maxWidth: 1100, margin: "0 auto", padding: "56px clamp(16px,4vw,48px) 80px", position: "relative", zIndex: 1, display: "flex", flexDirection: "column", gap: 28 },

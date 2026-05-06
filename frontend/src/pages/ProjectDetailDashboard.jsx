@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getProject, completeTask, syncCalendar } from "../api/client";
+import AppLogo from "../components/AppLogo";
 
 const TYPE_ICON = { learn: "📖", code: "💻", buffer: "☕" };
 const PHASE_COLOR = {
@@ -97,8 +98,7 @@ export default function ProjectDetailDashboard() {
       <nav style={s.nav}>
         <button style={s.backBtn} onClick={() => navigate("/projects")}>← All Projects</button>
         <div style={s.navLogo}>
-          <div style={s.logoIcon}>✦</div>
-          <span style={s.logoText}><span className="gradient-text">AI</span> Manager</span>
+          <AppLogo size={28} textSize={16} />
         </div>
         <button style={s.calBtn} onClick={() => navigate(`/project/${id}/plan`)}>📋 Full Plan</button>
       </nav>
@@ -381,7 +381,6 @@ const s = {
   backBtn: { background: "transparent", color: "rgba(255,255,255,0.55)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 999, padding: "7px 16px", fontSize: 13, fontWeight: 500, cursor: "pointer" },
   calBtn:  { background: "rgba(168,85,247,0.12)", color: "#c084fc", border: "1px solid rgba(168,85,247,0.3)", borderRadius: 999, padding: "7px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer" },
   navLogo: { display: "flex", alignItems: "center", gap: 9 },
-  logoIcon: { width: 28, height: 28, borderRadius: 7, background: "linear-gradient(135deg,#7c3aed,#6366f1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 },
   logoText: { fontSize: 16, fontWeight: 800, color: "#fff", letterSpacing: "-0.03em" },
   content: { maxWidth: 960, margin: "0 auto", padding: "56px clamp(16px,4vw,48px) 80px", position: "relative", zIndex: 1, display: "flex", flexDirection: "column", gap: 24 },
   hero: { display: "flex", flexDirection: "column", gap: 12 },

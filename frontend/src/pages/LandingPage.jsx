@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import AppLogo from "../components/AppLogo";
 
 /* ─── Partner logos ─── */
 const partners = ["Linear", "Notion", "Vercel", "Supabase", "Stripe", "GitHub"];
@@ -54,10 +55,7 @@ export default function LandingPage() {
       {/* ── NAV ── */}
       <nav style={s.nav}>
         <div style={s.navLogo}>
-          <div style={s.logoIcon}>✦</div>
-          <span style={s.logoText}>
-            <span className="gradient-text">AI</span> Manager
-          </span>
+          <AppLogo size={32} textSize={18} />
         </div>
         {/* <ul style={s.navLinks}>
           {["Features", "Pricing", "Docs", "Blog"].map((l) => (
@@ -272,10 +270,7 @@ export default function LandingPage() {
       {/* ── FOOTER ── */}
       <footer style={s.footer}>
         <div style={s.footerLogo}>
-          <div style={s.logoIcon}>✦</div>
-          <span style={s.logoText}>
-            <span className="gradient-text">AI</span> Manager
-          </span>
+          <AppLogo size={28} textSize={16} />
         </div>
         <p style={s.footerCopy}>© 2026 AI Project Manager</p>
       </footer>
@@ -306,12 +301,6 @@ const s = {
     borderBottom: "1px solid rgba(255,255,255,0.07)",
   },
   navLogo: { display: "flex", alignItems: "center", gap: 10 },
-  logoIcon: {
-    width: 32, height: 32, borderRadius: 8,
-    background: "linear-gradient(135deg, #7c3aed, #6366f1)",
-    display: "flex", alignItems: "center", justifyContent: "center",
-    fontSize: 16, boxShadow: "0 0 14px rgba(124,58,237,0.5)",
-  },
   logoText: { fontSize: 18, fontWeight: 800, letterSpacing: "-0.04em" },
   navLinks: { display: "flex", alignItems: "center", gap: 32, listStyle: "none" },
   navLink: { fontSize: 14, fontWeight: 500, color: "rgba(255,255,255,0.6)", transition: "color 0.2s", textDecoration: "none" },

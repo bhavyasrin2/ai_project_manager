@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { generatePlan } from "../api/client";
+import AppLogo from "../components/AppLogo";
 
 export default function SetupPage() {
   const navigate = useNavigate();
@@ -56,8 +57,7 @@ export default function SetupPage() {
           ← Back
         </button>
         <div style={s.topLogo}>
-          <div style={s.logoIcon}>✦</div>
-          <span style={s.logoText}>AI Manager</span>
+          <AppLogo size={28} textSize={16} />
         </div>
       </div>
 
@@ -227,11 +227,6 @@ const s = {
     transition: "all 0.2s",
   },
   topLogo: { display: "flex", alignItems: "center", gap: 9 },
-  logoIcon: {
-    width: 28, height: 28, borderRadius: 7,
-    background: "linear-gradient(135deg, #7c3aed, #6366f1)",
-    display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14,
-  },
   logoText: { fontSize: 16, fontWeight: 800, color: "#fff", letterSpacing: "-0.03em" },
   center: {
     minHeight: "100vh", display: "flex", flexDirection: "column",
