@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getProjectPlan, completeTask, updateTask, deleteTask } from "../api/client";
+import { getProjectPlan, completeTask, updateTask, deleteTask, mergeTasks } from "../api/client";
 import AppLogo from "../components/AppLogo";
 
 // ── Phase colour map ──────────────────────────────────────────────────────────
@@ -84,6 +84,19 @@ export default function PlanReviewPage() {
       alert(e.message);
     } finally {
       setDeleting(null);
+    }
+  };
+
+  const handleMerge = async (targetId, sourceId) => {
+    if (!window.confirm("Merge the next task into this one? This will combine their details and delete the next task.")) return;
+    setSaving(true);
+    try {
+      await mergeTasks(targetId, sourceId);
+      load();
+    } catch (e) {
+      alert(e.message);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -220,7 +233,7 @@ export default function PlanReviewPage() {
                   </div>
                   <div style={s.cardTopMid}>
                     <span style={{ ...s.phasePill, color: ps.color, background: ps.bg, borderColor: ps.border }}>
-                      {task.phase}
+                      {task.phase} 
                     </span>
                   </div>
                   {done
@@ -296,6 +309,17 @@ export default function PlanReviewPage() {
                      {deleting === task.id ? "..." : "🗑 Delete"}
                    </button>
                 </div>
+
+                {/* Merge with Next */}
+                {!isSynced && !done && i < filtered.length - 1 && filtered[i+1].day === task.day + 1 && (
+                  <button 
+                    style={s.mergeBtn} 
+                    onClick={() => handleMerge(task.id, filtered[i+1].id)}
+                    disabled={saving}
+                  >
+                    {saving ? "Merging..." : "🔗 Merge with Day " + filtered[i+1].day}
+                  </button>
+                )}
 
                 {/* Toggle button */}
                 {/* {!isBuffer && (
@@ -462,6 +486,7 @@ const s = {
   actionBtn: { flex: 1, padding: "8px", fontSize: 12, fontWeight: 600, borderRadius: 8, cursor: "pointer", border: "1px solid", transition: "all 0.2s" },
   editBtn: { background: "rgba(168,85,247,0.1)", color: "#c084fc", borderColor: "rgba(168,85,247,0.3)" },
   delBtn: { background: "rgba(239,68,68,0.1)", color: "#fca5a5", borderColor: "rgba(239,68,68,0.3)" },
+  mergeBtn: { marginTop: 10, width: "100%", padding: "8px", fontSize: 11, fontWeight: 700, borderRadius: 8, background: "rgba(34,211,238,0.08)", color: "#22d3ee", border: "1px solid rgba(34,211,238,0.2)", cursor: "pointer", transition: "all 0.2s" },
   modalOverlay: { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 },
   modal: { width: '100%', maxWidth: 500, background: '#12101c', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 24, padding: 32, boxShadow: '0 24px 64px rgba(0,0,0,0.5)' },
   modalTitle: { fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 24 },

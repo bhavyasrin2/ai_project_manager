@@ -648,3 +648,55 @@ def delete_task(task_id: int, db: Session = Depends(get_db)):
     db.delete(task)
     db.commit()
     return schemas.TaskDeleteResponse(message="Task deleted", task_id=task_id)
+
+
+# ──────────────────────────────────────────────────────────────
+# POST /api/tasks/{target_id}/merge/{source_id}
+# ──────────────────────────────────────────────────────────────
+
+@app.post(
+    "/api/tasks/{target_id}/merge/{source_id}",
+    response_model=schemas.TaskMergeResponse,
+    summary="Merge source task into target task",
+)
+def merge_tasks(target_id: int, source_id: int, db: Session = Depends(get_db)):
+    target = db.query(models.Task).filter(models.Task.id == target_id).first()
+    source = db.query(models.Task).filter(models.Task.id == source_id).first()
+
+    if not target or not source:
+        raise HTTPException(status_code=404, detail="One or both tasks not found")
+
+    if target.project_id != source.project_id:
+        raise HTTPException(status_code=400, detail="Tasks must belong to the same project")
+
+    if target.calendar_event_id or source.calendar_event_id:
+        raise HTTPException(status_code=400, detail="Cannot merge tasks that are already synced to calendar")
+
+    # Check consecutive days (Source must be the day immediately after Target)
+    if source.day != target.day + 1:
+        raise HTTPException(status_code=400, detail="Can only merge consecutive tasks (e.g. merge Day 7 into Day 6)")
+
+    # Combine fields
+    target.name = f"{target.name} & {source.name}"
+    
+    if source.description:
+        target.description = f"{target.description}\n\nMerged from Day {source.day}: {source.description}"
+    
+    # Merge sub_todos
+    target_subs = json.loads(target.sub_todos) if target.sub_todos else []
+    source_subs = json.loads(source.sub_todos) if source.sub_todos else []
+    target.sub_todos = json.dumps(target_subs + source_subs)
+
+    # Combine duration (simple string concat)
+    if source.duration:
+        target.duration = f"{target.duration} + {source.duration}"
+
+    # Delete source task
+    db.delete(source)
+    db.commit()
+    db.refresh(target)
+
+    return schemas.TaskMergeResponse(
+        message=f"Merged Day {source.day} into Day {target.day}",
+        target_task=target
+    )

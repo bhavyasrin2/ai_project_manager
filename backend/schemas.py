@@ -256,3 +256,8 @@ class TaskUpdateResponse(BaseModel):
 class TaskDeleteResponse(BaseModel):
     message: str
     task_id: int
+
+
+class TaskMergeResponse(BaseModel):
+    message: str
+    target_task: TaskOut

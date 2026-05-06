@@ -57,6 +57,11 @@ export const updateTask = (taskId, payload) =>
 export const deleteTask = (taskId) =>
   request(`/api/tasks/${taskId}`, { method: "DELETE" });
 
+/** Merge source task into target task.
+ *  Returns { message, target_task: TaskOut } */
+export const mergeTasks = (targetId, sourceId) =>
+  request(`/api/tasks/${targetId}/merge/${sourceId}`, { method: "POST" });
+
 /** Delete a project and all its tasks + email logs.
  *  Returns { message, project_id } */
 export const deleteProject = (id) =>
