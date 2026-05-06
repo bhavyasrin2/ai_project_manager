@@ -228,8 +228,8 @@ export default function PlanReviewPage() {
               >
                 {/* Card header row */}
                 <div style={s.cardTop}>
-                   <div style={s.dayBubble}>
-                    {done ? "✓" : i + 1}
+                  <div style={s.dayBubble}>
+                    {done ? "✓" : task.day}
                   </div>
                   <div style={s.cardTopMid}>
                     <span style={{ ...s.phasePill, color: ps.color, background: ps.bg, borderColor: ps.border }}>
@@ -317,7 +317,7 @@ export default function PlanReviewPage() {
                     onClick={() => handleMerge(task.id, filtered[i+1].id)}
                     disabled={saving}
                   >
-                    {saving ? "Merging..." : "🔗 Merge with Task " + (i + 2)}
+                    {saving ? "Merging..." : "🔗 Merge with Task " + (task.day + 1)}
                   </button>
                 )}
 
