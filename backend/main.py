@@ -569,6 +569,13 @@ def get_project_plan(project_id: int, db: Session = Depends(get_db)):
         tasks=tasks,
     )
 
+def _reindex_tasks(project_id: int, db: Session):
+    """Re-assign 'day' numbers for all tasks in a project to be continuous 1, 2, 3..."""
+    tasks = db.query(models.Task).filter(models.Task.project_id == project_id).order_by(models.Task.day).all()
+    for i, t in enumerate(tasks, start=1):
+        t.day = i
+    db.commit()
+
 
 # ──────────────────────────────────────────────────────────────
 # POST /api/tasks/{task_id}/complete  —  toggle done / pending
@@ -645,9 +652,12 @@ def delete_task(task_id: int, db: Session = Depends(get_db)):
     if task.calendar_event_id:
         raise HTTPException(status_code=400, detail="Cannot delete task that is already synced to calendar")
 
+    project_id = task.project_id
     db.delete(task)
     db.commit()
-    return schemas.TaskDeleteResponse(message="Task deleted", task_id=task_id)
+    _reindex_tasks(project_id, db)
+
+    return schemas.TaskDeleteResponse(message="Task deleted and plan re-indexed", task_id=task_id)
 
 
 # ──────────────────────────────────────────────────────────────
@@ -672,31 +682,29 @@ def merge_tasks(target_id: int, source_id: int, db: Session = Depends(get_db)):
     if target.calendar_event_id or source.calendar_event_id:
         raise HTTPException(status_code=400, detail="Cannot merge tasks that are already synced to calendar")
 
-    # Check consecutive days (Source must be the day immediately after Target)
+    # Check consecutive days
     if source.day != target.day + 1:
-        raise HTTPException(status_code=400, detail="Can only merge consecutive tasks (e.g. merge Day 7 into Day 6)")
+        raise HTTPException(status_code=400, detail="Can only merge consecutive tasks")
 
     # Combine fields
     target.name = f"{target.name} & {source.name}"
-    
     if source.description:
         target.description = f"{target.description}\n\nMerged from Day {source.day}: {source.description}"
     
-    # Merge sub_todos
     target_subs = json.loads(target.sub_todos) if target.sub_todos else []
     source_subs = json.loads(source.sub_todos) if source.sub_todos else []
     target.sub_todos = json.dumps(target_subs + source_subs)
 
-    # Combine duration (simple string concat)
     if source.duration:
         target.duration = f"{target.duration} + {source.duration}"
 
-    # Delete source task
+    project_id = target.project_id
     db.delete(source)
     db.commit()
+    _reindex_tasks(project_id, db)
     db.refresh(target)
 
     return schemas.TaskMergeResponse(
-        message=f"Merged Day {source.day} into Day {target.day}",
+        message="Tasks merged and plan re-indexed",
         target_task=target
     )
