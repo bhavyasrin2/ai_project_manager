@@ -208,11 +208,13 @@ export default function PlanReviewPage() {
         {/* ── Task Grid ── */}
         <div style={s.grid}>
           {filtered.map((task, i) => {
-            const ps      = phaseStyle(task.phase);
-            const done    = task.status === "done";
-            const isBuffer= task.task_type === "buffer";
-            const exp     = expanded[task.id];
-            const busy    = toggling === task.id;
+            const actualIndex = data.tasks.findIndex(t => t.id === task.id);
+            const nextTask    = data.tasks[actualIndex + 1];
+            const ps          = phaseStyle(task.phase);
+            const done        = task.status === "done";
+            const isBuffer    = task.task_type === "buffer";
+            const exp         = expanded[task.id];
+            const busy        = toggling === task.id;
 
             return (
               <div
@@ -229,7 +231,7 @@ export default function PlanReviewPage() {
                 {/* Card header row */}
                 <div style={s.cardTop}>
                   <div style={s.dayBubble}>
-                    {done ? "✓" : task.day}
+                    {done ? "✓" : actualIndex + 1}
                   </div>
                   <div style={s.cardTopMid}>
                     <span style={{ ...s.phasePill, color: ps.color, background: ps.bg, borderColor: ps.border }}>
@@ -311,13 +313,13 @@ export default function PlanReviewPage() {
                 </div>
 
                 {/* Merge with Next */}
-                {!isSynced && !done && i < filtered.length - 1 && filtered[i+1].day === task.day + 1 && (
+                {!isSynced && !done && nextTask && (
                   <button 
                     style={s.mergeBtn} 
-                    onClick={() => handleMerge(task.id, filtered[i+1].id)}
+                    onClick={() => handleMerge(task.id, nextTask.id)}
                     disabled={saving}
                   >
-                    {saving ? "Merging..." : "🔗 Merge with Task " + (task.day + 1)}
+                    {saving ? "Merging..." : "🔗 Merge with Task " + (actualIndex + 2)}
                   </button>
                 )}
 

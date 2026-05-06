@@ -682,9 +682,14 @@ def merge_tasks(target_id: int, source_id: int, db: Session = Depends(get_db)):
     if target.calendar_event_id or source.calendar_event_id:
         raise HTTPException(status_code=400, detail="Cannot merge tasks that are already synced to calendar")
 
-    # Check consecutive days
-    if source.day != target.day + 1:
-        raise HTTPException(status_code=400, detail="Can only merge consecutive tasks")
+    # Find the next task in the project sequence after the target
+    next_task = db.query(models.Task).filter(
+        models.Task.project_id == target.project_id,
+        models.Task.day > target.day
+    ).order_by(models.Task.day.asc()).first()
+
+    if not next_task or source.id != next_task.id:
+        raise HTTPException(status_code=400, detail="Can only merge with the immediately following task")
 
     # Combine fields
     target.name = f"{target.name} & {source.name}"
